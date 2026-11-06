@@ -1,0 +1,31 @@
+# GraphOTTER 复现依赖锁定（Python 3.9，macOS arm64）
+# 版本取自本机已验证可运行的 /opt/miniconda3/envs/graphotter
+# 安装：
+#   uv pip install --python .venv/bin/python -r requirements-lock.txt
+
+# --- LLM 接入 ---
+openai==2.45.0
+google-generativeai==0.8.6
+dashscope==1.26.3
+tiktoken==0.13.0
+
+# --- 稠密检索 / 向量索引 ---
+torch==2.2.2
+sentence-transformers==2.2.2
+transformers==4.29.2
+tokenizers==0.13.3
+safetensors==0.4.5
+huggingface-hub==0.19.4
+faiss-cpu==1.7.4
+numpy==1.26.4
+scipy==1.13.1
+scikit-learn==1.6.1
+
+# --- 表格 / 数据处理 ---
+pandas==2.3.3
+xlrd==2.0.2
+jsonlines==4.0.0
+
+# --- 文本处理 ---
+jieba==0.42.1
+nltk==3.9.2
