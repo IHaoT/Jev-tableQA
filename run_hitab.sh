@@ -9,10 +9,15 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-# 复用 ASTRA 项目里已有的 API 凭据；外部 export 的 GRAPHOTTER_* 优先。
-if [ -f /Users/mibo/paper/code/ASTRA/.env ]; then
-  set -a; source /Users/mibo/paper/code/ASTRA/.env; set +a
-fi
+# 凭据加载顺序：$GRAPHOTTER_ENV_FILE → 项目根目录 .env → 同级 ASTRA/.env；
+# 外部 export 的 GRAPHOTTER_* 优先。
+REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
+for envf in "${GRAPHOTTER_ENV_FILE:-}" "$REPO_ROOT/.env" "$REPO_ROOT/../ASTRA/.env"; do
+  if [ -n "$envf" ] && [ -f "$envf" ]; then
+    set -a; source "$envf"; set +a
+    break
+  fi
+done
 
 START="${1:-0}"
 END="${2:-20}"
@@ -24,7 +29,7 @@ fi
 MODEL="${GRAPHOTTER_MODEL:-Pro/deepseek-ai/DeepSeek-V3}"
 BASE_URL="${GRAPHOTTER_BASE_URL:-${SILICONFLOW_BASE_URL:-}}"
 API_KEY="${GRAPHOTTER_API_KEY:-${SILICONFLOW_API_KEY:-}}"
-EMBEDDER="${GRAPHOTTER_EMBEDDER:-/Users/mibo/paper/code/baseline_data/embedders/gte-base}"
+EMBEDDER="${GRAPHOTTER_EMBEDDER:-$REPO_ROOT/../baseline_data/embedders/gte-base}"
 DEPTH="${GRAPHOTTER_MAX_ITERATION_DEPTH:-4}"
 
 BASE_URL="${BASE_URL%/}/"
