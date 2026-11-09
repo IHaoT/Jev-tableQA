@@ -31,9 +31,9 @@ uv pip install --python .venv/bin/python -r requirements-lock.txt
 | HiTab | `dataset/hitab/test_samples.jsonl` + `dataset/hitab/raw/*.json` | 1584 题 / 538 张表 | 原始代码仓库的 `raw/` 只有一个占位文件；raw 表从本机 `GraphOTTER-main` 复制补齐 |
 | AIT-QA | `dataset/AIT-QA/aitqa_clean_questions.json` | 387 题 | 表格内嵌在问题 JSON 中，可直接运行 |
 
-embedder 使用本机权重：
-`/Users/mibo/paper/code/baseline_data/embedders/gte-base`（gte-base，210MB）。
-对应的 HuggingFace 缓存为 `thenlper/gte-base`。
+embedder 使用本地 `gte-base` 权重（约 210MB），通过 `GRAPHOTTER_EMBEDDER`
+指定权重目录；脚本默认取 `../baseline_data/embedders/gte-base`。
+对应的 HuggingFace 模型为 `thenlper/gte-base`。
 
 ## 3. LLM backbone
 
@@ -44,7 +44,8 @@ embedder 使用本机权重：
 - 可切换：Bailian `qwen3.7-plus` 等，只要设置对应的 `GRAPHOTTER_MODEL` /
   `GRAPHOTTER_BASE_URL` / `GRAPHOTTER_API_KEY`。
 
-凭据复用 `/Users/mibo/paper/code/ASTRA/.env`（脚本会 source，但不会打印）。
+凭据通过环境变量或 `.env` 文件提供：脚本依次尝试 `$GRAPHOTTER_ENV_FILE`、
+项目根目录 `.env`、同级 `../ASTRA/.env`，且不会打印内容。
 **这不是论文原始 backbone，数值不应与论文表格直接对齐**；复现重点是推理链路正确性。
 
 ## 4. 运行
